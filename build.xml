@@ -1,0 +1,55 @@
+<project name="RecocidoSimulado">
+  <property name="main.build.dir" value="build/main"/>
+  <property name="test.build.dir" value="build/test"/>
+  <property name="jar.build.dir"  value="build/jar"/>	
+  <property name="main.src.dir" value="src/main"/>
+  <property name="test.src.dir" value="src/test"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="main-class" value="principal.Principal"/>
+	
+  <path id="classpath">
+	<fileset dir="${lib.dir}" includes= "**/*.jar"/>
+	<pathelement location="${test.build.dir}"/>    
+	<pathelement location="${main.build.dir}"/>
+  </path>
+
+  <target name="clean">
+	<delete dir="${main.build.dir}"/>
+	<delete dir="${test.build.dir}"/>
+	<delete dir="${jar.buiild.dir}"/>
+  </target>		
+
+  <target name="compile" depends ="clean">
+    <mkdir dir="${main.build.dir}"/>
+	<mkdir dir="${test.build.dir}"/>
+	<javac srcdir="${main.src.dir}" destdir="${main.build.dir}" includeantruntime="false" classpathref="classpath"/>
+	<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" includeantruntime="false" classpathref="classpath"/>
+  </target>
+
+   <target name="run" depends="compile">
+	   <delete dir="${jar.build.dir}"/>	
+   	   <mkdir dir="${jar.build.dir}"/>
+		<jar destfile="${jar.build.dir}/${ant.project.name}.jar" basedir="${main.build.dir}">
+				<manifest>
+					<attribute name="Main-Class" value="${main-class}"/>
+				</manifest>		
+		</jar>
+		<java classname="${main-class}" fork="true">
+			<classpath>
+				<path refid="classpath"/>
+			</classpath>
+		</java>
+   </target>
+
+   <target name="test" depends="compile">
+    <junit printsummary="on" haltonfailure="yes" fork="true">
+       	 <formatter type="brief" usefile="false" />
+        <batchtest>
+            <fileset dir="${test.src.dir}" includes="**/*Test.java" />
+        </batchtest>
+		<classpath>
+			<path refid="classpath"/>
+		</classpath>
+    </junit>
+  </target>
+</project>
