@@ -9,17 +9,21 @@ import java.util.Hashtable;
 import recocidoSimulado.RecocidoSimulado;
 import org.junit.*;
 import static org.junit.Assert.*;
+import conector.ConectorBaseDatos;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class RecocidoSimuladoTest{
 	RecocidoSimulado recocido;	
-	
-	@Before
-	public void inicializa(){
-		recocido= new RecocidoSimulado();			
-	}		
+	ConectorBaseDatos conector;
+		
+
+	@Test
+	public void pruebaConeccion(){
+		conector = new ConectorBaseDatos("tsp");
+		assertTrue(conector.conecta());	
+	} 		
 	@Test	
 	public void pruebaFuncionObjetivo(){
-		assertTrue(recocido.funcionObjetivo()>=0.0);			
 	}
+	
 }
