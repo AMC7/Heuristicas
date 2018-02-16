@@ -11,20 +11,25 @@ import util.GeneradorDeClases;
 import conector.ConectorBaseDatos;
 import grafica.Grafica;
 import recocidoSimulado.*;
+import java.io.IOException;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class Principal{
 	
-	
-	
-	public static void main(String [] args){
-		ConectorBaseDatos conector = new ConectorBaseDatos("tsp");
+	public static void main(String [] args) throws IOException{	
+		String base = "/sqlite/tsp";		
+		String entrada = "entrada/entrada.txt";
+		double porc = 0.9; //porc de vecinas aceptadas				
+		int tamanoLote=50;
+		double factorFrio=0.8;
+		double e=0.12;
+		double et=0.12;
+		double ep =0.12;
+		int n = 56; 
+		
+		ConectorBaseDatos conector = new ConectorBaseDatos(base);
 		conector.conecta();
-		double[][] hola = conector.getPesos(); 
-		//double [][] pesos,int tamanoLote,int maximoBusquedasVecinas,int factorEnfriamiento,double ceroTemperatura	
-		//RecocidoSimulado recocido= new RecocidoSimulado(conector.getPesos(),100,100,0.6,0.1);
-		//Solucion solucion = new Solucion();		
-		//recocido.calculaLotes(2.22,solucion);
-		conector.close();
+		double [][] arreglo = conector.getPesos();
+		RecocidoSimulado recocido = new RecocidoSimulado(porc,entrada,arreglo,tamanoLote,factorFrio,e,et,ep,n);
 	}
 }

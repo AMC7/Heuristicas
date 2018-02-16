@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class ConectorBaseDatos{
@@ -24,13 +26,17 @@ public class ConectorBaseDatos{
 		try{
 			coneccion.close();
 		}catch(SQLException e){
-			e.printStackTrace();		
+			e.printStackTrace();
 		}	
 	}
 	
 	/**Unico constructor recibe un nombre, un usuario y una contrasena */
-	public ConectorBaseDatos(String nombreBase){
+	public ConectorBaseDatos(String nombreBase) throws IOException{
 		this.nombreBase=nombreBase;
+		File file = new File(nombreBase);
+		if(!file.exists()){
+			throw new IOException("No existe esa base de datos");		
+		}
 	}
 
 	public ResultSet creaStatement(String query){
@@ -48,8 +54,8 @@ public class ConectorBaseDatos{
 		double [][] pesos = new double[1093][1093];		
 		for(int i=0;i<pesos.length;i++)
 			for(int j=0;j<pesos.length;j++)
-				pesos[i][j]=Double.POSITIVE_INFINITY;
-		
+				if(i!=j)
+					pesos[i][j]=Double.POSITIVE_INFINITY;
 		try{	
 			while (resultado.next()) {
 				int idCity1=resultado.getInt(1); 			
@@ -58,18 +64,16 @@ public class ConectorBaseDatos{
 				pesos[idCity1][idCity2]=distance;
 				pesos[idCity2][idCity1]=distance;		 
 			}
-		for(double[] a:pesos){
-			p(Arrays.toString(a));		
-		}
 		}catch(SQLException e){
 			e.printStackTrace();		
 		}
+		close();
 		return pesos;	
 	}
 
 	public boolean conecta(){
 		try{
-			coneccion = DriverManager.getConnection("jdbc:sqlite:"+nombreBase);
+			coneccion = DriverManager.getConnection("jdbc:sqlite:"+nombreBase);		
 			return true;		
 		}catch(SQLException e){
 			e.printStackTrace();
