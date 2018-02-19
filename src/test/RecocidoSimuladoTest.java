@@ -36,7 +36,7 @@ public class RecocidoSimuladoTest{
 		File file = new File("entrada/entrada.txt");
 		assertTrue("No existe el archivo de entrada",file.exists());		
 		texto =lee("entrada/entrada.txt");		
-		Solucion solucion = new Solucion(texto) ;	
+		//Solucion solucion = new Solucion(texto) ;	
 	}	
 	
 	@Test	

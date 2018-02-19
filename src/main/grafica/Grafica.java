@@ -12,18 +12,23 @@ import java.util.HashSet;
    @author Antonio Martinez Cruz*/
 public class Grafica{
 	
-	double [][] grafica;	
+	Double [][] grafica;	
 	
-	public Grafica(double [][] a){			
+	public Grafica(Double [][] a){			
 		grafica=a;		
 	}	
 
-	public double[][] getArreglo(){
+	public Double[][] getArreglo(){
 		return grafica;	
 	}
 
-	public void setArreglo(double [][] a){
+	public void setArreglo(Double [][] a){
 		grafica=a;		
 	}
+
+	public Double getPeso(int i,int j){
+		return grafica[i][j];
+	}
+
 	
 }

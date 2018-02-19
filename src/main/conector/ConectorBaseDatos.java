@@ -49,20 +49,22 @@ public class ConectorBaseDatos{
 		return null;
 	}
 
-	public double[][] getPesos(){
+	public Double[][] getPesos(){
 		ResultSet resultado = creaStatement("SELECT * FROM connections;");
-		double [][] pesos = new double[1093][1093];		
+		Double [][] pesos = new Double[1093][1093];		
 		for(int i=0;i<pesos.length;i++)
 			for(int j=0;j<pesos.length;j++)
 				if(i!=j)
 					pesos[i][j]=Double.POSITIVE_INFINITY;
+				else
+					pesos[i][j]=0.;
 		try{	
 			while (resultado.next()) {
 				int idCity1=resultado.getInt(1); 			
 				int idCity2=resultado.getInt(2); 			
-				double distance=resultado.getDouble(3);	 
+				Double distance=resultado.getDouble(3);	 
 				pesos[idCity1][idCity2]=distance;
-				pesos[idCity2][idCity1]=distance;		 
+				pesos[idCity2][idCity1]=distance;
 			}
 		}catch(SQLException e){
 			e.printStackTrace();		
