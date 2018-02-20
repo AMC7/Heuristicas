@@ -27,7 +27,10 @@ public class Grafica{
 	}
 
 	public Double getPeso(int i,int j){
-		return grafica[i][j];
+		if(i>=0 && i<grafica.length && j>=0 && j<grafica.length )		
+			return grafica[i][j];
+		else
+			return 0.;
 	}
 
 	

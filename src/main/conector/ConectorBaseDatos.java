@@ -30,7 +30,6 @@ public class ConectorBaseDatos{
 		}	
 	}
 	
-	/**Unico constructor recibe un nombre, un usuario y una contrasena */
 	public ConectorBaseDatos(String nombreBase) throws IOException{
 		this.nombreBase=nombreBase;
 		File file = new File(nombreBase);
