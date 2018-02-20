@@ -126,7 +126,6 @@ public class RecocidoSimulado{
 		return busquedaBinaria(s,t1,t2);
 	}	
 
-	public Double 
 
 	public Solucion lanzaSemilla(Solucion solucion){	
 		Solucion inicial = new Solucion(solucion);
