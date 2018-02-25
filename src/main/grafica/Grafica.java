@@ -11,27 +11,28 @@ import java.util.HashSet;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class Grafica{
-	
-	Double [][] grafica;	
-	
-	public Grafica(Double [][] a){			
-		grafica=a;		
-	}	
+
+	Double [][] grafica;
+
+	public Grafica(Double [][] a){
+		grafica=a;
+	}
 
 	public Double[][] getArreglo(){
-		return grafica;	
+		return grafica;
 	}
 
 	public void setArreglo(Double [][] a){
-		grafica=a;		
+		grafica=a;
 	}
 
 	public Double getPeso(int i,int j){
-		if(i>=0 && i<grafica.length && j>=0 && j<grafica.length )		
+		if(i>=0 && i<grafica.length && j>=0 && j<grafica.length )
 			return grafica[i][j];
-		else
+		else{
 			return 0.;
+		}
 	}
 
-	
+
 }

@@ -27,58 +27,57 @@ public class ConectorBaseDatos{
 			coneccion.close();
 		}catch(SQLException e){
 			e.printStackTrace();
-		}	
+		}
 	}
-	
+
 	public ConectorBaseDatos(String nombreBase) throws IOException{
 		this.nombreBase=nombreBase;
 		File file = new File(nombreBase);
 		if(!file.exists()){
-			throw new IOException("No existe esa base de datos");		
+			throw new IOException("No existe esa base de datos");
 		}
 	}
 
 	public ResultSet creaStatement(String query){
-		try{		
+		try{
 			Statement m_Statement = coneccion.createStatement();
 			return  m_Statement.executeQuery(query);
 		}catch(SQLException e){
-			e.printStackTrace();		
+			e.printStackTrace();
 		}
 		return null;
 	}
 
 	public Double[][] getPesos(){
 		ResultSet resultado = creaStatement("SELECT * FROM connections;");
-		Double [][] pesos = new Double[1093][1093];		
+		Double [][] pesos = new Double[1093][1093];
 		for(int i=0;i<pesos.length;i++)
 			for(int j=0;j<pesos.length;j++)
 				if(i!=j)
 					pesos[i][j]=Double.POSITIVE_INFINITY;
 				else
 					pesos[i][j]=0.;
-		try{	
+		try{
 			while (resultado.next()) {
-				int idCity1=resultado.getInt(1); 			
-				int idCity2=resultado.getInt(2); 			
-				Double distance=resultado.getDouble(3);	 
+				int idCity1=resultado.getInt(1);
+				int idCity2=resultado.getInt(2);
+				Double distance=resultado.getDouble(3);
 				pesos[idCity1][idCity2]=distance;
 				pesos[idCity2][idCity1]=distance;
 			}
 		}catch(SQLException e){
-			e.printStackTrace();		
+			e.printStackTrace();
 		}
-		close();
-		return pesos;	
+		return pesos;
 	}
 
 	public boolean conecta(){
 		try{
-			coneccion = DriverManager.getConnection("jdbc:sqlite:"+nombreBase);		
-			return true;		
+			coneccion = DriverManager.getConnection("jdbc:sqlite:"+nombreBase);
+			return true;
 		}catch(SQLException e){
 			e.printStackTrace();
-			return false;			
+			return false;
 		}
 	}
 

@@ -17,21 +17,21 @@ import java.io.File;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class RecocidoSimuladoTest{
-	RecocidoSimulado recocido;	
+	RecocidoSimulado recocido;
 	ConectorBaseDatos conector;
-	int [] arreglo;	
+	int [] arreglo;
 	String texto;
-	
-			
+
+
 	@Test
 	public void pruebaConeccion(){
 		try{
 			conector = new ConectorBaseDatos("/sqlite/tsp");
 		}catch(Exception e){
-			e.printStackTrace();			
-		}		
-		assertTrue("No esta bien la ruta sql.",conector.conecta());	
-	} 	
+			e.printStackTrace();
+		}
+		assertTrue("No esta bien la ruta sql.",conector.conecta());
+	}
 	@Test
 	public void pruebaFuncionCosto(){
 		Integer [] arreglo = {0,1,2,3,4};
@@ -39,21 +39,21 @@ public class RecocidoSimuladoTest{
 							  {5.,0.,10.,Double.POSITIVE_INFINITY,12.},
 							  {6.,10.,0.,15.,21.},
 							  {7.,Double.POSITIVE_INFINITY,15.,0.,20.},
-							  {8.,12.,21.,20.,0.}		
+							  {8.,12.,21.,20.,0.}
 							 };
 		for(int i=0;i<matriz.length;i++){
 			for(int j=0;j<matriz[i].length;j++){
 				assertTrue(matriz[i][j].equals(matriz[j][i]));
-			}		
+			}
 		}
 		Constantes.setConstantes(arreglo,matriz,1.);
-		Solucion  solucion = new Solucion(arreglo);		
+		Solucion  solucion = new Solucion(arreglo);
 		solucion.shuffle();
 		Solucion  temp= solucion.getVecino();
 		Solucion  temp1= new Solucion(temp.getArreglo());
-		boolean booleano  = temp.equals(temp1); 		
+		boolean booleano  = temp.equals(temp1);
 		assertTrue("1"+(temp.toString()+"\n\n!=\n\n"+temp1.toString()),booleano);
-	}	
-	
-	
+	}
+
+
 }

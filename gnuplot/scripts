@@ -1,0 +1,5 @@
+set style line 1 lc rgb 'green' pt 7  # square
+set style line 2 lc rgb '#87CEFAx' pt 7   # circle
+plot "< awk '{if($3 == 1) print}' gnuplot.dat" u 1:2 t "maximo" w p ls 1, \
+     "< awk '{if($3 == 0) print}' gnuplot.dat" u 1:2 t "no maximo" w l
+pause -1

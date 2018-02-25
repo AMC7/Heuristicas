@@ -25,9 +25,9 @@ public class Solucion implements Comparable<Object>{
 
 	private Double f;
 	private Integer [] arreglo;
-	
+
 	public Integer[] getArreglo(){
-		return arreglo;	
+		return arreglo;
 	}
 
 	@Override
@@ -36,52 +36,52 @@ public class Solucion implements Comparable<Object>{
 			Solucion other = (Solucion)objeto;
 			return f.compareTo(other.f);
 		}
-		return -1;	
+		return -1;
 	}
-	
+
 	public Solucion(Integer [] arreglo){
-		this.arreglo=arreglo;
-		setF();			
-	}
-	
-	public Solucion(Solucion solucion){
-		arreglo=solucion.getArreglo().clone();
-		shuffle();
-		setF();			
-	}
-	
-	public Solucion(Solucion solucion,Integer [] arreglo2,int o,int p){
-		arreglo = arreglo2.clone();
-		setF(solucion,o,p);	
-	}
-	
-	public Solucion(Grafica grafica,double castigo,String entrada){		
-		textToArray(entrada);		
+		this.arreglo=arreglo.clone();
 		setF();
 	}
 
-	public Solucion(String entrada){		
+	public Solucion(Solucion solucion){
+		arreglo=solucion.getArreglo().clone();
+		setF();
+	}
+
+	public Solucion(Solucion solucion,Integer [] arreglo2,int o,int p){
+		arreglo = arreglo2.clone();
+		setF(solucion,o,p);
+	}
+
+	public Solucion(Grafica grafica,double castigo,String entrada){
+		textToArray(entrada);
+		setF();
+	}
+
+	public Solucion(String entrada){
 		textToArray(entrada);
 		setF();
 	}
 	public void textToArray(String entrada){
 		String [] texto = lee(entrada).replace(" ","").replace("\n","").replace("[","").replace("]","").split(",");
 		arreglo = new Integer[texto.length];
-		Integer i =0;		
+		Integer i =0;
 		for(String cadena: texto)
-			arreglo[i++]=Integer.parseInt(cadena);			
-	}	
-	
+			arreglo[i++]=Integer.parseInt(cadena);
+	}
+
 	public Double getF(){
 		return f;
 	}
 
 	public double funcionCosto(int i, int j){
-		if(Constantes.grafica.getPeso(arreglo[i],arreglo[j]).equals(Double.POSITIVE_INFINITY))
-				return Constantes.castigo;			
+		if(Constantes.grafica.getPeso(arreglo[i],arreglo[j]).equals(Double.POSITIVE_INFINITY)){
+				return Constantes.castigo;
+			}
 		else
 				return Constantes.grafica.getPeso(arreglo[i],arreglo[j]);
-		
+
 	}
 	/**Esta es la funcion de costo*/
 	public void setF(){
@@ -96,7 +96,7 @@ public class Solucion implements Comparable<Object>{
 		return i<arreglo.length&& i>=0;
 	}
 	public void setF(Solucion solucion,int o,int p){
-		Double res = solucion.getF()*(Constantes.pesoPromedio*(arreglo.length-1));		
+		Double res = solucion.getF()*(Constantes.pesoPromedio*(arreglo.length-1));
 		int min = Math.min(o,p);
 		int max = Math.max(o,p);
 		if(esValido(min)&&esValido(max)){
@@ -116,22 +116,22 @@ public class Solucion implements Comparable<Object>{
 				res-=solucion.funcionCosto(max,max+1);
 				res+=funcionCosto(max,max+1);
 			}
-	
+
 		}
 		f=res/(Constantes.pesoPromedio*(arreglo.length-1));
-	}	
+	}
 
 	public void swap(Integer [] a,Integer i,Integer j){
 		Integer uno = a[i];
 		a[i]=a[j];
 		a[j]=uno;
-	} 
+	}
 
 	public Solucion getVecino(){
-		Integer [] arreglo2 = arreglo.clone();			
+		Integer [] arreglo2 = arreglo.clone();
 		Random ran = new Random();
 		Integer o = ran.nextInt(arreglo2.length);
-		Integer p = ran.nextInt(arreglo2.length);	
+		Integer p = ran.nextInt(arreglo2.length);
 		swap(arreglo2,o,p);
 		return new Solucion(this,arreglo2,o,p);
 	}
@@ -149,10 +149,10 @@ public class Solucion implements Comparable<Object>{
 	public boolean esFactible(){
 		for(int i=0;i<arreglo.length-1;i++){
 			if(Constantes.grafica.getPeso(arreglo[i],arreglo[i+1]).equals(Double.POSITIVE_INFINITY)){
-				return false;			
+				return false;
 			}
-		}	
-		return true;	
+		}
+		return true;
 	}
 
 	@Override
@@ -164,8 +164,8 @@ public class Solucion implements Comparable<Object>{
 	public boolean equals(Object object){
 		if(object instanceof Solucion){
 			Solucion other = (Solucion)object;
-			return Arrays.equals(other.getArreglo(),arreglo)&&other.getF().equals(f);		
+			return Arrays.equals(other.getArreglo(),arreglo)&&other.getF().equals(f);
 		}
 		return false;
-	}	
+	}
 }
