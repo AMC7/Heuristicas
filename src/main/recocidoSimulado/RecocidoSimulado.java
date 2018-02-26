@@ -150,7 +150,6 @@ public class RecocidoSimulado{
 	public Solucion lanzaSemilla(Solucion solucion){
 		print="";
 		Solucion inicial = new Solucion(solucion);
-		inicial.shuffle();
 		Double tInicial =temperaturaInicial(inicial,temp);
 		return aceptacionPorUmbrales(tInicial,inicial);
 	}

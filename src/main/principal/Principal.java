@@ -76,6 +76,8 @@ public class Principal{
 			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,grafica);
 			for(int j=0;j<numeroSemillas;j++){
 				long inicio = System.nanoTime();
+				solucion.shuffle();
+				Solucion semilla = new Solucion(solucion);				
 				Solucion actual = recocido.lanzaSemilla(solucion);
 				if(actual.compareTo(solucion)==-1&&actual.esFactible())
 					solucion = actual;
@@ -83,7 +85,9 @@ public class Principal{
 
 				p(imprimeTiempo(inicio,termino));
 				p(imprimePorcentaje(j,numeroSemillas)+"%");
-				p(actual);
+				p("Actual:\n\n"+actual);
+				p("Semilla:\n\n"+semilla);
+
 			}
 			escribe(salida,Arrays.toString(solucion.getArreglo()).replace("[","").replace("]",""));
 			recocido.guardaGrafica();
