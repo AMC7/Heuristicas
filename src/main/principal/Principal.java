@@ -36,6 +36,7 @@ public class Principal{
 			Constantes.setConstantes(entrada,conector,f);
 			Solucion solucion = new Solucion(entrada);
 			Solucion mejor = new Solucion(solucion);
+			String length = String.valueOf(solucion.getArreglo().length);			
 			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);
 			for(int j=0;j<numeroSemillas;j++){
 				long inicio = System.nanoTime();
@@ -49,7 +50,7 @@ public class Principal{
 				if(actual.compareTo(mejor)==-1){
 					mejor = actual;
 					escribe(salida,Arrays.toString(mejor.getArreglo()).replace("[","").replace("]",""));
-					escribe("entrada/semilla"+entrada+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
+					escribe("entrada/semilla"+length+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
 					recocido.guardaGrafica();
 				}
 				long termino = System.nanoTime();
@@ -90,6 +91,7 @@ public class Principal{
 			Constantes.random = new Random(semilla.hashCode());	
 			Solucion actual = recocido.lanzaSemilla(semilla);
 			p("Actual:"+actual);
+			recocido.guardaGrafica();
 		}
 
 		public static void main(String [] args) throws IOException{
