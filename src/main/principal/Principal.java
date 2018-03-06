@@ -92,6 +92,7 @@ public class Principal{
 			Solucion actual = recocido.lanzaSemilla(semilla);
 			p("Actual:"+actual);
 			recocido.guardaGrafica();
+			escribe("entrada/semilla"+length+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
 		}
 
 		public static void main(String [] args) throws IOException{
