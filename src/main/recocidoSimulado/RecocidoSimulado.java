@@ -50,7 +50,7 @@ public class RecocidoSimulado{
 		int c =0;
 		Double r = 0.0;
 		int contador =0;
-		int limite = lenLote*50;
+		int limite = lenLote*500;
 		while(c<lenLote){
 			Solucion s1 = s.getVecino();
 			contador++;
@@ -84,13 +84,16 @@ public class RecocidoSimulado{
 		Solucion minimoLocal = new Solucion(s.getArreglo());
 		while(temperatura>e){
 			Double q = Double.POSITIVE_INFINITY;
-			while(p.compareTo(q)<=0){
+			int repeticiones = 0;
+			while(p.compareTo(q)<0){
 				q = p;
 				SimpleEntry<Double,Solucion> dupla = calculaLotes(temperatura,s);
 				p=dupla.getKey();
 				s=dupla.getValue();
 				minimoLocal = imprimeElValor(minimoLocal,s,i);
 				i+=1.;
+				if(repeticiones++ ==50)
+					break;
 			}
 			temperatura = fEnfriamiento*temperatura;
 		}

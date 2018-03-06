@@ -44,9 +44,13 @@ public class Solucion implements Comparable<Object>{
 		setF();
 	}
 
+	public Solucion(Integer [] arreglo, Double f){
+		this.arreglo=arreglo.clone();
+		this.f = f;
+	}
+
 	public Solucion(Solucion solucion){
-		arreglo=solucion.getArreglo().clone();
-		setF();
+		this(solucion.getArreglo(),solucion.getF());
 	}
 
 	public Solucion(Solucion solucion,Integer [] arreglo2,int o,int p){
@@ -63,6 +67,7 @@ public class Solucion implements Comparable<Object>{
 		textToArray(entrada);
 		setF();
 	}
+
 	public void textToArray(String entrada){
 		String [] texto = lee(entrada).replace(" ","").replace("\n","").replace("[","").replace("]","").split(",");
 		arreglo = new Integer[texto.length];
@@ -76,9 +81,8 @@ public class Solucion implements Comparable<Object>{
 	}
 
 	public double funcionCosto(int i, int j){
-		if(Constantes.grafica.getPeso(arreglo[i],arreglo[j]).equals(Double.POSITIVE_INFINITY)){
+		if(Constantes.grafica.getPeso(arreglo[i],arreglo[j]).equals(Double.POSITIVE_INFINITY))
 				return Constantes.castigo;
-			}
 		else
 				return Constantes.grafica.getPeso(arreglo[i],arreglo[j]);
 
@@ -129,9 +133,8 @@ public class Solucion implements Comparable<Object>{
 
 	public Solucion getVecino(){
 		Integer [] arreglo2 = arreglo.clone();
-		Random ran = new Random();
-		Integer o = ran.nextInt(arreglo2.length);
-		Integer p = ran.nextInt(arreglo2.length);
+		Integer o = Constantes.random.nextInt(arreglo2.length);
+		Integer p = Constantes.random.nextInt(arreglo2.length);
 		swap(arreglo2,o,p);
 		return new Solucion(this,arreglo2,o,p);
 	}
@@ -147,12 +150,15 @@ public class Solucion implements Comparable<Object>{
 	}
 
 	public boolean esFactible(){
-		for(int i=0;i<arreglo.length-1;i++){
-			if(Constantes.grafica.getPeso(arreglo[i],arreglo[i+1]).equals(Double.POSITIVE_INFINITY)){
+		for(int i=0;i<arreglo.length-1;i++)
+			if(Constantes.grafica.getPeso(arreglo[i],arreglo[i+1]).equals(Double.POSITIVE_INFINITY))
 				return false;
-			}
-		}
 		return true;
+	}
+
+	@Override
+	public int hashCode(){
+		return Arrays.toString(arreglo).hashCode();
 	}
 
 	@Override

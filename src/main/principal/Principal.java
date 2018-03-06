@@ -16,49 +16,11 @@ import java.lang.Thread;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
+import java.util.Random;
+import static recocidoSimulado.Constantes.*;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class Principal{
-
-		public static String base;
-		public static String entrada;
-		public static double porc;
-		public static int tamanoLote;
-		public static double factorFrio;
-		public static double e;
-		public static double et;
-		public static double ep;
-		public static double f;
-		public static int n;
-		public static double temp;
-		public static String salida;
-		public static int numeroSemillas;
-		public static String grafica;
-		public static ConectorBaseDatos conector;
-
-		public void leeArchivoConfiguracion(String archivo){
-			String texto = lee(archivo);
-			texto= texto.replace(" ","");
-			texto= texto.replace("\t","");
-			String [] parametros = texto.split("\n");
-			for(int i=0;i<parametros.length;i++){
-				parametros[i] = parametros[i].substring(parametros[i].indexOf("=")+1);
-			}
-			base = parametros[0];
-			entrada = parametros[1];
-			porc = Double.parseDouble(parametros[2]);
-			tamanoLote=Integer.parseInt(parametros[3]);
-			factorFrio=Double.parseDouble(parametros[4]);
-			e=Double.parseDouble(parametros[5]);
-			et=Double.parseDouble(parametros[6]);
-			ep =Double.parseDouble(parametros[7]);
-			f  = Double.parseDouble(parametros[8]);
-			n = Integer.parseInt(parametros[9]) ;
-			temp = Double.parseDouble(parametros[10]);
-			salida= parametros[11];
-			numeroSemillas =Integer.parseInt(parametros[12]);
-			grafica = parametros[13];
-		}
 
 		public static String imprimeTiempo(long inicio,long termino){
 			Double diferencia = new Double(termino-inicio);
@@ -73,24 +35,27 @@ public class Principal{
 		public static void lanzaSemillas(){
 			Constantes.setConstantes(entrada,conector,f);
 			Solucion solucion = new Solucion(entrada);
-			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,grafica);
+			Solucion mejor = new Solucion(solucion);
+			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);
 			for(int j=0;j<numeroSemillas;j++){
 				long inicio = System.nanoTime();
 				solucion.shuffle();
-				Solucion semilla = new Solucion(solucion);				
-				Solucion actual = recocido.lanzaSemilla(solucion);
-				if(actual.compareTo(solucion)==-1&&actual.esFactible())
-					solucion = actual;
+				Solucion semilla = new Solucion(solucion);	
+				p("num"+semilla.hashCode());
+				Constantes.random = new Random(semilla.hashCode());				
+				p("Semilla:"+semilla);
+				p(imprimePorcentaje(j,numeroSemillas)+"%");			
+				Solucion actual = recocido.lanzaSemilla(semilla);
+				if(actual.compareTo(mejor)==-1){
+					mejor = actual;
+					escribe(salida,Arrays.toString(mejor.getArreglo()).replace("[","").replace("]",""));
+					escribe("entrada/semilla"+entrada+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
+					recocido.guardaGrafica();
+				}
 				long termino = System.nanoTime();
-
-				p(imprimeTiempo(inicio,termino));
-				p(imprimePorcentaje(j,numeroSemillas)+"%");
-				p("Actual:\n\n"+actual);
-				p("Semilla:\n\n"+semilla);
-
+				p("Resultado:"+actual);
+				p(imprimeTiempo(inicio,termino)+"\n\n");
 			}
-			escribe(salida,Arrays.toString(solucion.getArreglo()).replace("[","").replace("]",""));
-			recocido.guardaGrafica();
 		}
 
 		public static void evaluaSoluciones(){
@@ -110,19 +75,40 @@ public class Principal{
 
 		}
 
+		public static void evaluaSemilla(String valor){
+			if(!valor.equals("40")&&!valor.equals("150")){
+				p("El valor:"+valor+" no es valido");				
+				return;
+			}	
+			leeArchivoConfiguracion("config/configuraciones"+valor+".cnf");			
+			Constantes.setConstantes(entrada,conector,f);
+			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);			
+			Solucion solucion = new Solucion(entrada);
+			Solucion semilla = new Solucion(solucion);		
+			p("Semilla:"+semilla);
+			p("num"+semilla.hashCode());
+			Constantes.random = new Random(semilla.hashCode());	
+			Solucion actual = recocido.lanzaSemilla(semilla);
+			p("Actual:"+actual);
+		}
+
 		public static void main(String [] args) throws IOException{
-			Principal principal = new Principal();
-			principal.leeArchivoConfiguracion("config/configuraciones.cnf");
-			conector = new ConectorBaseDatos(base);
-			conector.conecta();
+			leeArchivoConfiguracion("config/configuraciones.cnf");
 			Scanner sc = new Scanner(System.in);
-			p("Selecciona:\n0: lanzaSemillas\n1: evaluaSoluciones");
+			p("Selecciona:\n0: lanzaSemillas\n1: evaluaSoluciones\n2: pruebaSemilla");
 			int i = sc.nextInt();
-			if(i ==0){
-				lanzaSemillas();
-			}else{
-				evaluaSoluciones();
-			}
+			switch(i){
+				case 0:
+					lanzaSemillas();
+				break;
+				case 1:		
+					evaluaSoluciones();
+				break;
+				case 2:
+					String valor = sc.next();
+					evaluaSemilla(valor);
+				break;		
+			}			
 			conector.close();
 		}
 }

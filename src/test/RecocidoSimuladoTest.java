@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import recocidoSimulado.*;
 import java.io.IOException;
 import java.io.File;
+import java.util.Arrays;
+import java.lang.Math;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class RecocidoSimuladoTest{
@@ -22,18 +24,8 @@ public class RecocidoSimuladoTest{
 	int [] arreglo;
 	String texto;
 
-
 	@Test
-	public void pruebaConeccion(){
-		try{
-			conector = new ConectorBaseDatos("/sqlite/tsp");
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		assertTrue("No esta bien la ruta sql.",conector.conecta());
-	}
-	@Test
-	public void pruebaFuncionCosto(){
+	public void pruebaVecino(){
 		Integer [] arreglo = {0,1,2,3,4};
 		Double [][] matriz = {{0.,5.,6.,7.,8.},
 							  {5.,0.,10.,Double.POSITIVE_INFINITY,12.},
@@ -51,8 +43,27 @@ public class RecocidoSimuladoTest{
 		solucion.shuffle();
 		Solucion  temp= solucion.getVecino();
 		Solucion  temp1= new Solucion(temp.getArreglo());
-		boolean booleano  = temp.equals(temp1);
-		assertTrue("1"+(temp.toString()+"\n\n!=\n\n"+temp1.toString()),booleano);
+		boolean booleano  = Math.abs(temp.getF()-temp1.getF())<=0.00001;
+		assertTrue(temp.toString()+"!="+temp1.toString(),booleano);
+	}
+
+	@Test
+	public void pruebaPromedio(){ 
+		int tamano = 150;
+		Double [][] matriz = new Double [tamano][tamano]; 	
+		Integer [] arreglo = new Integer [matriz.length];
+		for(int i =0;i<arreglo.length;i++)
+			arreglo[i]=i;				
+		int valor = 1;		
+		for(int i =0;i<tamano;i++)
+			for(int j =0;j<tamano;j++){
+				matriz[i][j] = (double)valor++;
+			}
+		Constantes.setConstantes(arreglo,matriz,1.);
+		double cuadrado = (double)tamano*tamano;
+		double promEsp = ((cuadrado*(cuadrado+1.))/2.)/(cuadrado);
+		assertTrue(Constantes.pesoPromedio==promEsp);	
+				
 	}
 
 

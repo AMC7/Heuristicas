@@ -6,14 +6,62 @@ import conector.ConectorBaseDatos;
 import static util.ManejadorDeArchivos.*;
 import java.util.HashSet;
 import java.util.Arrays;
+import java.util.Random;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class Constantes{
 
 	public static double pesoPromedio;
 	public static Grafica grafica;
+	public static String graficaPath;
 	public static double castigo;
-	private static Integer [] arreglo;
+	public static String base;
+	public static String entrada;
+	public static double porc;
+	public static int tamanoLote;
+	public static double factorFrio;
+	public static double e;
+	public static double et;
+	public static double ep;
+	public static double f;
+	public static int n;
+	public static double temp;
+	public static String salida;
+	public static int numeroSemillas;
+	public static ConectorBaseDatos conector;
+	public static Integer [] arreglo;
+	public static Random random;
+
+	
+
+	public static void leeArchivoConfiguracion(String archivo){
+		String texto = lee(archivo).replace(" ","").replace("\t","");
+		String [] parametros = texto.split("\n");
+		for(int i=0;i<parametros.length;i++)
+			parametros[i] = parametros[i].substring(parametros[i].indexOf("=")+1);
+		
+		base = parametros[0];
+		entrada = parametros[1];
+		porc = Double.parseDouble(parametros[2]);
+		tamanoLote=Integer.parseInt(parametros[3]);
+		factorFrio=Double.parseDouble(parametros[4]);
+		e=Double.parseDouble(parametros[5]);
+		et=Double.parseDouble(parametros[6]);
+		ep =Double.parseDouble(parametros[7]);
+		f  = Double.parseDouble(parametros[8]);
+		n = Integer.parseInt(parametros[9]) ;
+		temp = Double.parseDouble(parametros[10]);
+		salida= parametros[11];
+		numeroSemillas =Integer.parseInt(parametros[12]);
+		graficaPath = parametros[13];
+		try{
+			conector = new ConectorBaseDatos(base);
+		}catch(Exception e){
+			e.printStackTrace();	
+		}		
+		conector.conecta();
+			
+	}
 
 	public static void setConstantes(String entrada,ConectorBaseDatos conector,Double f){
 		grafica = new Grafica(conector.getPesos());
