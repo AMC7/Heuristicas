@@ -34,12 +34,12 @@ public class Constantes{
 
 	
 
-	public static void leeArchivoConfiguracion(String archivo){
+	public static void setConstantes(String archivo){
 		String texto = lee(archivo).replace(" ","").replace("\t","");
 		String [] parametros = texto.split("\n");
 		for(int i=0;i<parametros.length;i++)
 			parametros[i] = parametros[i].substring(parametros[i].indexOf("=")+1);
-		
+		//Inicio las constantes que no necesitan calculos extra
 		base = parametros[0];
 		entrada = parametros[1];
 		porc = Double.parseDouble(parametros[2]);
@@ -60,11 +60,8 @@ public class Constantes{
 			e.printStackTrace();	
 		}		
 		conector.conecta();
-			
-	}
-
-	public static void setConstantes(String entrada,ConectorBaseDatos conector,Double f){
-		grafica = new Grafica(conector.getPesos());
+		//Inicio las constantes que necesitan calculos extra
+		grafica = new Grafica(conector.getPesos());	
 		textToArray(entrada);
 		setCastigo(f);
 		setPesoPromedio();

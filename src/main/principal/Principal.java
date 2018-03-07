@@ -110,6 +110,7 @@ public class Principal{
 					evaluaSoluciones();
 				break;
 				case 2:
+					p("Quieres evaluar la semilla de 40 o la de 150");
 					String valor = sc.next();
 					evaluaSemilla(valor);
 				break;		
