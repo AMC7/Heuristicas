@@ -33,7 +33,6 @@ public class Principal{
 		}
 
 		public static void lanzaSemillas(){
-			Constantes.setConstantes(entrada,conector,f);
 			Solucion solucion = new Solucion(entrada);
 			Solucion mejor = new Solucion(solucion);
 			String length = String.valueOf(solucion.getArreglo().length);			
@@ -65,7 +64,6 @@ public class Principal{
 			if(archivos!=null){
 				for(File archivo:archivos){
 					if(!archivo.isDirectory()&&archivo.getAbsolutePath().endsWith("tsp")){
-						Constantes.setConstantes(archivo.getAbsolutePath(),conector,f);									
 						Solucion solucion = new Solucion(archivo.getAbsolutePath());
 						p(archivo.getAbsolutePath());
 						p(solucion);
@@ -76,22 +74,16 @@ public class Principal{
 
 		}
 
-		public static void evaluaSemilla(String valor){
-			if(!valor.equals("40")&&!valor.equals("150")){
-				p("El valor:"+valor+" no es valido");				
-				return;
-			}	
-			leeArchivoConfiguracion("config/configuraciones"+valor+".cnf");			
-			Constantes.setConstantes(entrada,conector,f);
-			RecocidoSimulado recocido= new RecocidoSimulado();			
-			Solucion solucion = new Solucion(entrada);
-			Solucion semilla = new Solucion(solucion);		
-			String length = String.valueOf(solucion.getArreglo().length);								
+		public static void evaluaSemilla(RecocidoSimulado recocido){
+			Solucion semilla = new Solucion(entrada);
 			p("Semilla:"+semilla);
-			p("num"+semilla.hashCode());
 			Constantes.random = new Random(semilla.hashCode());	
 			Solucion actual = recocido.lanzaSemilla(semilla);
 			p("Actual:"+actual);
+		}
+
+
+		public static void save(RecocidoSimulado recocido,Solucion semilla,Solucion actual){
 			recocido.guardaGrafica();
 			escribe("entrada/semilla"+length+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
 			escribe(salida,Arrays.toString(actual.getArreglo()).replace("[","").replace("]",""));
@@ -103,17 +95,24 @@ public class Principal{
 			int i = sc.nextInt();
 			switch(i){
 				case 0:
-					leeArchivoConfiguracion("config/configuraciones.cnf");
+					setConstantes("config/configuraciones.cnf");
 					lanzaSemillas();
 				break;
 				case 1:		
+					setConstantes("config/configuraciones.cnf");
 					evaluaSoluciones();
 				break;
 				case 2:
 					p("Quieres evaluar la semilla de 40 o la de 150");
 					String valor = sc.next();
-					evaluaSemilla(valor);
-				break;		
+					if(!valor.equals("40")&&!valor.equals("150")){
+						p("El valor:"+valor+" no es valido");				
+						return;
+					}	
+					setConstantes("config/configuraciones"+valor+".cnf");
+					RecocidoSimulado recocido= new RecocidoSimulado();			
+					evaluaSemilla(recocido);					
+					break;		
 			}			
 			conector.close();
 		}

@@ -31,7 +31,7 @@ public class Constantes{
 	public static ConectorBaseDatos conector;
 	public static Integer [] arreglo;
 	public static Random random;
-
+	public static String length;
 	
 
 	public static void setConstantes(String archivo){
@@ -54,17 +54,18 @@ public class Constantes{
 		salida= parametros[11];
 		numeroSemillas =Integer.parseInt(parametros[12]);
 		graficaPath = parametros[13];
+		//Inicio las constantes que necesitan calculos extra		
 		try{
 			conector = new ConectorBaseDatos(base);
 		}catch(Exception e){
 			e.printStackTrace();	
 		}		
 		conector.conecta();
-		//Inicio las constantes que necesitan calculos extra
 		grafica = new Grafica(conector.getPesos());	
 		textToArray(entrada);
 		setCastigo(f);
 		setPesoPromedio();
+		length = String.valueOf(arreglo.length);	
 	}
 
 	public static void setConstantes(Integer[] arreglo,Double[][] pesos,Double f){
