@@ -86,6 +86,7 @@ public class Principal{
 			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);			
 			Solucion solucion = new Solucion(entrada);
 			Solucion semilla = new Solucion(solucion);		
+			String length = String.valueOf(solucion.getArreglo().length);								
 			p("Semilla:"+semilla);
 			p("num"+semilla.hashCode());
 			Constantes.random = new Random(semilla.hashCode());	
@@ -93,6 +94,7 @@ public class Principal{
 			p("Actual:"+actual);
 			recocido.guardaGrafica();
 			escribe("entrada/semilla"+length+".tsp",Arrays.toString(semilla.getArreglo()).replace("[","").replace("]",""));		
+			escribe(salida,Arrays.toString(actual.getArreglo()).replace("[","").replace("]",""));
 		}
 
 		public static void main(String [] args) throws IOException{

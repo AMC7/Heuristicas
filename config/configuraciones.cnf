@@ -1,13 +1,13 @@
 Direccion de base de datos = /sqlite/tsp.db
 Direccion de la entrada = entrada/entrada-150.tsp
-Porcentaje de vecinos acceptados = 0.7
+Porcentaje de vecinos aceptados = 0.9264
 Tamaño del lote=600
 (Phi) Factor de Enfrimiento=0.99
 e=0.001
 et=0.001
 ep =0.001
 f  = 4
-Iteraciones de busqueda de temperatura = 100
+Iteraciones de busqueda de temperatura = 1
 Temperatura = 8
 Salida = salidas/tonio-150.tsp
 Numero de semillas = 10000
