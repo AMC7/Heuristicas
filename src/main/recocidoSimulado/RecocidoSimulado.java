@@ -14,44 +14,24 @@ import java.util.Map.Entry;
 import java.util.AbstractMap.SimpleEntry;
 import static java.lang.Math.abs;
 import java.lang.Thread;
+import static recocidoSimulado.Constantes.*;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class RecocidoSimulado{
 
-	private int lenLote;
-	private Double fEnfriamiento;
 	private Solucion mejorSolucion;
-	private Double porAceptados;
-	private Double e;
-	private Double et;
-	private Double ep;
-	private int n;
-	private double temp;
 	private String print;
-	private String direcGrafica;
-
+	
 	public void guardaGrafica(){
-		escribe(direcGrafica,print);
-	}
-
-	public RecocidoSimulado(Double por,int lenLote,Double fEnfriamiento,Double e,Double et,Double ep,int n,double temperatura,String dir){
-		porAceptados=por;
-		this.lenLote=lenLote;
-	 	this.fEnfriamiento=fEnfriamiento;
-		this.e=e;
-		this.et=et;
-		this.ep=ep;
-		this.n=n;
-		this.temp = temperatura;
-		direcGrafica=dir;
+		escribe(graficaPath,print);
 	}
 
 	public SimpleEntry<Double,Solucion> calculaLotes(Double temperatura,Solucion s){
 		int c =0;
 		Double r = 0.0;
 		int contador =0;
-		int limite = lenLote*500;
-		while(c<lenLote){
+		int limite = tamanoLote*500;
+		while(c<tamanoLote){
 			Solucion s1 = s.getVecino();
 			contador++;
 			if(s1.esMenorOIgual(temperatura,s)){
@@ -64,7 +44,7 @@ public class RecocidoSimulado{
 			}
 		}
 
-		return new SimpleEntry<Double,Solucion> (r/lenLote,s);
+		return new SimpleEntry<Double,Solucion> (r/tamanoLote,s);
 	}
 
 	public Solucion imprimeElValor(Solucion minimoLocal, Solucion s, double i){
@@ -95,7 +75,7 @@ public class RecocidoSimulado{
 				if(repeticiones++ ==50)
 					break;
 			}
-			temperatura = fEnfriamiento*temperatura;
+			temperatura = factorFrio*temperatura;
 		}
 		return s;
 	}
@@ -117,9 +97,9 @@ public class RecocidoSimulado{
 		if(t2-t1<et)
 			return tm;
 		Double p = getPorcentajeAceptados(s,tm);
-		if(abs(porAceptados-p)<ep)
+		if(abs(porc-p)<ep)
 			return tm;
-		if(p>porAceptados)
+		if(p>porc)
 			return busquedaBinaria(s,t1,tm);
 		else
 			return busquedaBinaria(s,tm,t2);
@@ -129,17 +109,17 @@ public class RecocidoSimulado{
 		Double p= getPorcentajeAceptados(s,temperatura);
 		Double t1 = 0.0;
 		Double t2 = 0.0;
-		if(abs(porAceptados-p)<=ep)
+		if(abs(porc-p)<=ep)
 			return temperatura;
-		if(p<porAceptados){
-			while(p<porAceptados){
+		if(p<porc){
+			while(p<porc){
 				temperatura = 2*temperatura;
 				p=getPorcentajeAceptados(s,temperatura);
 			}
 			t1 = temperatura/2;
 			t2 = temperatura;
 		}else{
-			while(p>porAceptados){
+			while(p>porc){
 				temperatura = temperatura/2;
 				p=getPorcentajeAceptados(s,temperatura);
 			}

@@ -37,7 +37,7 @@ public class Principal{
 			Solucion solucion = new Solucion(entrada);
 			Solucion mejor = new Solucion(solucion);
 			String length = String.valueOf(solucion.getArreglo().length);			
-			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);
+			RecocidoSimulado recocido= new RecocidoSimulado();
 			for(int j=0;j<numeroSemillas;j++){
 				long inicio = System.nanoTime();
 				solucion.shuffle();
@@ -83,7 +83,7 @@ public class Principal{
 			}	
 			leeArchivoConfiguracion("config/configuraciones"+valor+".cnf");			
 			Constantes.setConstantes(entrada,conector,f);
-			RecocidoSimulado recocido= new RecocidoSimulado(porc,tamanoLote,factorFrio,e,et,ep,n,temp,graficaPath);			
+			RecocidoSimulado recocido= new RecocidoSimulado();			
 			Solucion solucion = new Solucion(entrada);
 			Solucion semilla = new Solucion(solucion);		
 			String length = String.valueOf(solucion.getArreglo().length);								
@@ -98,12 +98,12 @@ public class Principal{
 		}
 
 		public static void main(String [] args) throws IOException{
-			leeArchivoConfiguracion("config/configuraciones.cnf");
 			Scanner sc = new Scanner(System.in);
 			p("Selecciona:\n0: lanzaSemillas\n1: evaluaSoluciones\n2: pruebaSemilla");
 			int i = sc.nextInt();
 			switch(i){
 				case 0:
+					leeArchivoConfiguracion("config/configuraciones.cnf");
 					lanzaSemillas();
 				break;
 				case 1:		
