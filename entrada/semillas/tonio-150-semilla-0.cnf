@@ -1,0 +1,14 @@
+Direccion de base de datos = /sqlite/tsp.db
+Direccion de la entrada = entrada/semillas/tonio-150-semilla-0.tsp
+Porcentaje de vecinos acceptados = 0.35	
+Tamaño del lote=600
+(Phi) Factor de Enfrimiento=0.99
+e=0.00001
+et=0.001
+ep =0.001
+f  = 2.6701
+Iteraciones de busqueda de temperatura = 1000000
+Temperatura = 8
+Numero de semillas = 10000
+Direccion grafica = gnuplot/tonio-150.dat
+barrido = false

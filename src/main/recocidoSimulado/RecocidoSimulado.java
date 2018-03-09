@@ -19,11 +19,36 @@ import static recocidoSimulado.Constantes.*;
    @author Antonio Martinez Cruz*/
 public class RecocidoSimulado{
 
+	private Solucion semilla;
 	private Solucion mejorSolucion;
 	private String print;
+	private Double i = 0.0;
 	
-	public void guardaGrafica(){
-		escribe(graficaPath,print);
+	public RecocidoSimulado(Solucion solucion){
+		semilla = new Solucion(solucion);
+	}
+
+	public String getGrafica(){
+		return print;
+	}
+
+	public Solucion getSemilla(){
+		return semilla;	
+	}
+
+	public Solucion getResultado(){
+		return mejorSolucion;	
+	}
+
+	public void hasBarrido(Solucion solucion){
+		int tam = solucion.getArreglo().length;
+		mejorSolucion = new Solucion(solucion);					
+		for(int i=0;i<tam;i++)
+			for(int j=0;j<tam;j++){
+				Solucion res = solucion.getVecino(i,j);
+				if(res.compareTo(mejorSolucion)==-1)
+					mejorSolucion = imprimeElValor(mejorSolucion,res,i+=1.);		
+			}
 	}
 
 	public SimpleEntry<Double,Solucion> calculaLotes(Double temperatura,Solucion s){
@@ -55,12 +80,11 @@ public class RecocidoSimulado{
 		}else{
 			print+=(String.valueOf(i+=1.0)+" "+String.valueOf(s.getF()))+" 0\n";
 			return minimoLocal;
-			}
+		}
 	}
 
 	public Solucion aceptacionPorUmbrales(Double temperatura,Solucion s){
 		Double p=0.0;
-		Double i = 0.0;
 		Solucion minimoLocal = new Solucion(s.getArreglo());
 		while(temperatura>e){
 			Double q = Double.POSITIVE_INFINITY;
@@ -72,7 +96,7 @@ public class RecocidoSimulado{
 				s=dupla.getValue();
 				minimoLocal = imprimeElValor(minimoLocal,s,i);
 				i+=1.;
-				if(repeticiones++ ==50)
+				if(repeticiones++ ==100)
 					break;
 			}
 			temperatura = factorFrio*temperatura;
@@ -129,11 +153,18 @@ public class RecocidoSimulado{
 		return busquedaBinaria(s,t1,t2);
 	}
 
-
-	public Solucion lanzaSemilla(Solucion solucion){
+	public void lanzaSemilla(){
 		print="";
-		Solucion inicial = new Solucion(solucion);
-		Double tInicial =temperaturaInicial(inicial,temp);
-		return aceptacionPorUmbrales(tInicial,inicial);
+		if(barrido){
+			hasBarrido(semilla);
+			semilla = mejorSolucion;
+		}
+		Double tInicial =temperaturaInicial(semilla,temp);
+		tInicial = 1.;		
+		p("TEEEEmp"+tInicial);		
+		mejorSolucion =  aceptacionPorUmbrales(tInicial,semilla);
+		if(barrido){
+			hasBarrido(mejorSolucion);
+		}
 	}
 }

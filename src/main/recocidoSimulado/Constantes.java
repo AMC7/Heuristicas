@@ -7,6 +7,7 @@ import static util.ManejadorDeArchivos.*;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Random;
+import java.io.File;
 /**@version 1.0
    @author Antonio Martinez Cruz*/
 public class Constantes{
@@ -32,14 +33,25 @@ public class Constantes{
 	public static Integer [] arreglo;
 	public static Random random;
 	public static String length;
-	
+	public static String direccionSemilla;	
+	public static boolean barrido;
 
-	public static void setConstantes(String archivo){
+	public static String[] ponParametros(String archivo){
 		String texto = lee(archivo).replace(" ","").replace("\t","");
 		String [] parametros = texto.split("\n");
 		for(int i=0;i<parametros.length;i++)
 			parametros[i] = parametros[i].substring(parametros[i].indexOf("=")+1);
+		return parametros;
+	}
+
+	public static int getNumeroArchivos(String directorio){
+		File file = new File(directorio);
+		return file.listFiles().length;
+	}
+
+	public static void setConstantes(String archivo){
 		//Inicio las constantes que no necesitan calculos extra
+		String[] parametros = ponParametros(archivo);
 		base = parametros[0];
 		entrada = parametros[1];
 		porc = Double.parseDouble(parametros[2]);
@@ -51,21 +63,24 @@ public class Constantes{
 		f  = Double.parseDouble(parametros[8]);
 		n = Integer.parseInt(parametros[9]) ;
 		temp = Double.parseDouble(parametros[10]);
-		salida= parametros[11];
-		numeroSemillas =Integer.parseInt(parametros[12]);
-		graficaPath = parametros[13];
+		numeroSemillas = Integer.parseInt(parametros[11]);
+		graficaPath = parametros[12];	
+		barrido = Boolean.parseBoolean(parametros[13]);
+		textToArray(entrada);
 		//Inicio las constantes que necesitan calculos extra		
 		try{
 			conector = new ConectorBaseDatos(base);
 		}catch(Exception e){
-			e.printStackTrace();	
+			e.printStackTrace();
 		}		
 		conector.conecta();
-		grafica = new Grafica(conector.getPesos());	
-		textToArray(entrada);
+		grafica = new Grafica(conector.getPesos());					
 		setCastigo(f);
 		setPesoPromedio();
-		length = String.valueOf(arreglo.length);	
+		length = String.valueOf(arreglo.length);
+		int valor = getNumeroArchivos("entrada/semillas/")/2;
+		salida= "salidas/res/tonio-"+length+"-"+valor+".tsp";		
+		direccionSemilla = "entrada/semillas/tonio-"+length+"-semilla-"+valor+".tsp";
 	}
 
 	public static void setConstantes(Integer[] arreglo,Double[][] pesos,Double f){
@@ -85,7 +100,6 @@ public class Constantes{
 
 	public static void setCastigo(Double f){
 		Double maximaDistancia = 0.0;
-
 		for(int ciudad:arreglo){
 			for(int ciudad2:arreglo){
 				Double peso = grafica.getPeso(ciudad,ciudad2);

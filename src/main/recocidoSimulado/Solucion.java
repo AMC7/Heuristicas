@@ -131,10 +131,18 @@ public class Solucion implements Comparable<Object>{
 		a[j]=uno;
 	}
 
+	public void swap(Integer i,Integer j){
+		swap(arreglo,i,j);
+	}
+
 	public Solucion getVecino(){
+		Integer o = Constantes.random.nextInt(arreglo.length);
+		Integer p = Constantes.random.nextInt(arreglo.length);
+		return getVecino(o,p);
+	}
+
+	public Solucion getVecino(int o,int p){
 		Integer [] arreglo2 = arreglo.clone();
-		Integer o = Constantes.random.nextInt(arreglo2.length);
-		Integer p = Constantes.random.nextInt(arreglo2.length);
 		swap(arreglo2,o,p);
 		return new Solucion(this,arreglo2,o,p);
 	}
