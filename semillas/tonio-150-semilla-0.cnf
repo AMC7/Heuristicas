@@ -1,9 +1,9 @@
 Direccion de base de datos = /sqlite/tsp.db
-entrada =entrada/semillas/tonio-150-semilla-2.tsp
+Direccion de la entrada = semillas/tonio-150-semilla-0.tsp
 Porcentaje de vecinos acceptados = 0.35	
 Tamaño del lote=600
 (Phi) Factor de Enfrimiento=0.99
-e=0.00001
+e=0.001
 et=0.001
 ep =0.001
 f  = 2.6701

@@ -78,9 +78,9 @@ public class Constantes{
 		setCastigo(f);
 		setPesoPromedio();
 		length = String.valueOf(arreglo.length);
-		int valor = getNumeroArchivos("entrada/semillas/")/2;
+		int valor = getNumeroArchivos("semillas/")/2;
 		salida= "salidas/res/tonio-"+length+"-"+valor+".tsp";		
-		direccionSemilla = "entrada/semillas/tonio-"+length+"-semilla-"+valor+".tsp";
+		direccionSemilla = "semillas/tonio-"+length+"-semilla-"+valor+".tsp";
 	}
 
 	public static void setConstantes(Integer[] arreglo,Double[][] pesos,Double f){
