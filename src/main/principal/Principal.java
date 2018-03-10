@@ -36,10 +36,10 @@ public class Principal{
 				Solucion semilla = new Solucion(mejor);	
 				semilla.shuffle();				
 				RecocidoSimulado recocido= new RecocidoSimulado(semilla);
-				evaluaSemilla(recocido);		
+				evaluaSemilla(recocido);
 				if(recocido.getResultado().compareTo(mejor)==-1){
 					mejor = recocido.getResultado();
-					save(recocido);
+					save(recocido,j);
 				}
 				long termino = System.nanoTime();
 				p(imprimeTiempo(inicio,termino)+"\n\n");
@@ -54,25 +54,28 @@ public class Principal{
 		}
 
 		public static void evaluaSoluciones(){
-			File file= new File("salidas");
+			File file= new File("salidas/res");
 			File[] archivos = file.listFiles();
-			if(archivos!=null){
-				for(File archivo:archivos){
-					if(!archivo.isDirectory()&&archivo.getAbsolutePath().endsWith("tsp")){
-						Solucion solucion = new Solucion(archivo.getAbsolutePath());
-						p(archivo.getAbsolutePath());
-						p(solucion);
-						p("\n\n");
+			config = "salidas/res/general.cnf";			
+			setConstantes(config);
+			if(archivos!=null)
+				for(File archivo:archivos)
+					if(!archivo.isDirectory()&&archivo.getAbsolutePath().endsWith(".tsp")){
+						p(new Solucion(archivo.getAbsolutePath()).getF()+": "+archivo.getName());
 					}
-				}
-			}
-
 		}
 
 
-		public static void save(RecocidoSimulado recocido){
-			escribe(graficaPath,recocido.getGrafica());	
-			escribe(direccionSemilla,Arrays.toString(recocido.getSemilla().getArreglo()).replace("[","").replace("]",""));				
+		public static void save(RecocidoSimulado recocido,int i){
+			String numero = String.valueOf(i);
+			String original = direccionSemilla;
+			direccionSemilla = direccionSemilla.replace(".tsp","")+numero+".tsp";
+			saveSemilla(recocido);	
+			direccionSemilla = original;
+		}
+
+		public static void saveSemilla(RecocidoSimulado recocido){
+			escribe(direccionSemilla,Arrays.toString(recocido.getSemilla().getArreglo()).replace("[","").replace("]",""));
 			String direccionSemillaConf = direccionSemilla.substring(0,direccionSemilla.indexOf(".")+1)+"cnf";
 			String [] tmp		 = lee(config).split("\n");
 			String renglones  = "";
@@ -82,7 +85,12 @@ public class Principal{
 				else				
 					renglones+=tmp[i]+"\n";			
 			}
-			escribe(direccionSemillaConf,renglones);	
+			escribe(direccionSemillaConf,renglones);
+			escribe(graficaPath,recocido.getGrafica());
+		} 
+		
+		public static void saveResultado(RecocidoSimulado recocido){
+			escribe(graficaPath,recocido.getGrafica());	
 			escribe(salida,Arrays.toString(recocido.getResultado().getArreglo()).replace("[","").replace("]",""));
 		}
 
@@ -112,32 +120,38 @@ public class Principal{
 			switch(i){
 				case 0:
 					p("Que semilla quieres usar para el recocido?");
-					File archivo = getFile("entrada/semillas",sc);	
+					File archivo = getFile("semillas",sc);	
 					config = archivo.getAbsolutePath();	
 					setConstantes(config);
 					lanzaSemillas();
-				break;
+					break;
 				case 1:
-					config = "config/configuraciones.cnf";		
-					setConstantes(config);
 					evaluaSoluciones();
-				break;
+					break;
 				case 2:
 					p("Que semilla quieres ejecutar?");
-					archivo = getFile("entrada/semillas",sc);	
+					archivo = getFile("semillas",sc);	
 					config = archivo.getAbsolutePath();	
 					setConstantes(config);
 					recocido= new RecocidoSimulado(new Solucion(entrada));			
 					evaluaSemilla(recocido);
 					break;
-			}			
-			conector.close();
-			p("Quieres salvar el resultado?[S/N]");
-			String guardar= sc.next();
-			switch(guardar){
-				case "S":	
-					save(recocido);	
-			}			
-					
+			}
+			
+			if(i!=1){			
+				conector.close();
+				p("Quieres salvar la semilla?[S/N]");
+				String guardar= sc.next();
+				switch(guardar){
+					case "S":	
+						saveSemilla(recocido);	
+				}
+				p("Quieres salvar el resultado?[S/N]");
+				guardar= sc.next();
+				switch(guardar){
+					case "S":	
+						saveResultado(recocido);	
+				}
+			}	
 		}
 }

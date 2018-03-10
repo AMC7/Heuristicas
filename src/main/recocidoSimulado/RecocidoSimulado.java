@@ -22,10 +22,10 @@ public class RecocidoSimulado{
 	private Solucion semilla;
 	private Solucion mejorSolucion;
 	private String print;
-	private Double i = 0.0;
 	
 	public RecocidoSimulado(Solucion solucion){
 		semilla = new Solucion(solucion);
+		mejorSolucion = new Solucion(solucion);
 	}
 
 	public String getGrafica(){
@@ -42,29 +42,36 @@ public class RecocidoSimulado{
 
 	public void hasBarrido(Solucion solucion){
 		int tam = solucion.getArreglo().length;
-		mejorSolucion = new Solucion(solucion);					
-		for(int i=0;i<tam;i++)
-			for(int j=0;j<tam;j++){
-				Solucion res = solucion.getVecino(i,j);
-				if(res.compareTo(mejorSolucion)==-1)
-					mejorSolucion = imprimeElValor(mejorSolucion,res,i+=1.);		
+		Solucion minimoLocal = new Solucion(solucion);				
+		imprimeElValor(minimoLocal);		
+		do{
+			mejorSolucion = new Solucion(minimoLocal);
+			imprimeElValor(minimoLocal);			
+			for(int i=0;i<tam;i++){
+				for(int j=i+1;j<tam;j++){
+					Solucion tmp = mejorSolucion.getVecino(i,j);
+					if(tmp.compareTo(mejorSolucion)==-1){
+						minimoLocal = tmp;
+					}
+				}
 			}
+		}while(!minimoLocal.getF().equals(mejorSolucion.getF()));
+			
 	}
 
 	public SimpleEntry<Double,Solucion> calculaLotes(Double temperatura,Solucion s){
 		int c =0;
 		Double r = 0.0;
 		int contador =0;
-		int limite = tamanoLote*500;
+		int limite = tamanoLote*20;
 		while(c<tamanoLote){
 			Solucion s1 = s.getVecino();
-			contador++;
 			if(s1.esMenorOIgual(temperatura,s)){
 				s = s1;
 				c++;
 				r+=s1.getF();
 			}
-			if(contador==limite){
+			if(contador++==limite){
 				break;
 			}
 		}
@@ -72,32 +79,21 @@ public class RecocidoSimulado{
 		return new SimpleEntry<Double,Solucion> (r/tamanoLote,s);
 	}
 
-	public Solucion imprimeElValor(Solucion minimoLocal, Solucion s, double i){
-		if(s.compareTo(minimoLocal)<0){
-			 print+=(String.valueOf(i+=1.0)+" "+String.valueOf(s.getF()))+" 1\n";
-			 print+=(String.valueOf(i+=1.0)+" "+String.valueOf(s.getF()))+" 0\n";
-			 return s;
-		}else{
-			print+=(String.valueOf(i+=1.0)+" "+String.valueOf(s.getF()))+" 0\n";
-			return minimoLocal;
-		}
+	public void imprimeElValor(Solucion s){
+		print+=String.valueOf(s.getF())+"\n";		
 	}
 
 	public Solucion aceptacionPorUmbrales(Double temperatura,Solucion s){
 		Double p=0.0;
-		Solucion minimoLocal = new Solucion(s.getArreglo());
 		while(temperatura>e){
 			Double q = Double.POSITIVE_INFINITY;
 			int repeticiones = 0;
-			while(p.compareTo(q)<0){
+			while(p.compareTo(q)<=0){
 				q = p;
 				SimpleEntry<Double,Solucion> dupla = calculaLotes(temperatura,s);
 				p=dupla.getKey();
 				s=dupla.getValue();
-				minimoLocal = imprimeElValor(minimoLocal,s,i);
-				i+=1.;
-				if(repeticiones++ ==100)
-					break;
+				imprimeElValor(s);
 			}
 			temperatura = factorFrio*temperatura;
 		}
@@ -155,14 +151,13 @@ public class RecocidoSimulado{
 
 	public void lanzaSemilla(){
 		print="";
+		Double tInicial;
+		tInicial =temperaturaInicial(semilla,temp);
 		if(barrido){
 			hasBarrido(semilla);
-			semilla = mejorSolucion;
-		}
-		Double tInicial =temperaturaInicial(semilla,temp);
-		tInicial = 1.;		
-		p("TEEEEmp"+tInicial);		
-		mejorSolucion =  aceptacionPorUmbrales(tInicial,semilla);
+			tInicial*=1.99;
+		}		
+		mejorSolucion =  aceptacionPorUmbrales(tInicial,mejorSolucion);
 		if(barrido){
 			hasBarrido(mejorSolucion);
 		}

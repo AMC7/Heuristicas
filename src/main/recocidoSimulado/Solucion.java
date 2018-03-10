@@ -138,6 +138,7 @@ public class Solucion implements Comparable<Object>{
 	public Solucion getVecino(){
 		Integer o = Constantes.random.nextInt(arreglo.length);
 		Integer p = Constantes.random.nextInt(arreglo.length);
+		//p(Arrays.toString(Thread.currentThread().getStackTrace()));				
 		return getVecino(o,p);
 	}
 
@@ -171,7 +172,7 @@ public class Solucion implements Comparable<Object>{
 
 	@Override
 	public String toString(){
-		return Arrays.toString(arreglo)+"\nf:"+getF()+"\nesFactible:"+esFactible();
+		return "f:"+getF()+"\nesFactible:"+esFactible();
 	}
 
 	@Override

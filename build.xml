@@ -26,7 +26,7 @@
 	<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" includeantruntime="false" classpathref="classpath"/>
   </target>
 
-   <target name="run" depends="compile">
+   <target name="run">
 	   <delete dir="${jar.build.dir}"/>	
    	   <mkdir dir="${jar.build.dir}"/>
 		<jar destfile="${jar.build.dir}/${ant.project.name}.jar" basedir="${main.build.dir}">
@@ -41,7 +41,7 @@
 		</java>
    </target>
 
-   <target name="test" depends="compile">
+   <target name="test">
     <junit printsummary="on" haltonfailure="yes" fork="true">
        	 <formatter type="brief" usefile="false" />
         <batchtest>
